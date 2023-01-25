@@ -10,3 +10,11 @@ button{
     flex-direction: column;
     border-bottom: solid gray;
 }
+
+.forecast-cards {
+
+    background-color: #2b2b8b;
+    color: white;
+    margin: 5px 10px;
+    
+}

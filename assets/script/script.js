@@ -7,6 +7,24 @@ var cityName;
 var lonCity;
 var latCity;
 
+var convertKelvinToCelsius = function(temp) {
+    var temInCelsius = temp - 273.15;
+    return temInCelsius.toFixed(2);
+
+};
+
+var getForecastElement = function(temp, windSpeed, humidity) {
+
+    var forecastEl = $('<div>');
+    forecastEl.addClass('col forecast-cards');
+
+    forecastEl.append($('<p>').text("Temp: " + convertKelvinToCelsius(temp) + "\u00B0C"));
+    forecastEl.append($('<p>').text("Wind: " + windSpeed +" KPH"));
+    forecastEl.append($('<p>').text("Humidity: " + humidity +"%"));
+
+    return forecastEl;
+
+}
 
 $('#search-button').on('click', function(event) {
 
@@ -45,29 +63,42 @@ $('#search-button').on('click', function(event) {
             console.log(response);
 
             var weatherList = response.list;
-            var currentDate = moment(weatherList[0].dt_txt, 'YYYY-MM-DD');
-            var formattedDate = currentDate.format('D/M/YYYY');
-            var temInCelsius = weatherList[0].main.temp - 273.15;
-            var nextDay = currentDate.add(1,'day');
-            
-            //console.log(nextDay.format('D/M/YYYY HH:mm:ss'));
+            var date = moment(weatherList[0].dt_txt, 'YYYY-MM-DD');
+            var formattedDate = date.format('D/M/YYYY');
+    
+            var dateList = [];
+            var numList = 0;
+
+            while(numList < 5){
+                date.add(1,'day');
+                dateList.push(date.format('YYYY-MM-DD')+" 12:00:00");
+                numList++;
+            }
+            console.log("Date List");
+            $.each(dateList, function (i, val) { 
+                 console.log(val);
+            });
 
             var imgIcon = $('<img>');
             imgIcon.attr('src', "http://openweathermap.org/img/wn/"+weatherList[0].weather[0].icon+"@2x.png");
             // imgIcon.css('display', 'inline');
             
             $('#today').append(currentDayHeading.text(response.city.name + " (" + formattedDate + ") ").append(imgIcon));
-            $('#today').append($('<p>').text("Temp: " + temInCelsius.toFixed(2) + "\u00B0C"));
+            $('#today').append($('<p>').text("Temp: " + convertKelvinToCelsius(weatherList[0].main.temp) + "\u00B0C"));
             $('#today').append($('<p>').text("Wind: " + weatherList[0].wind.speed+" KPH"));
             $('#today').append($('<p>').text("Humidity: " + weatherList[0].main.humidity+"%"));
 
+            var forecastSectionEl = $('#forecast');
 
             for(var i=1; i<weatherList.length; i++) {
 
-                if(weatherList[i].dt_txt === nextDay.format('YYYY-MM-DD')+" 12:00:00") {
+                if(dateList.includes(weatherList[i].dt_txt)) {
 
                     console.log(weatherList[i].dt_txt+" Formating **********");
                     
+
+                    forecastSectionEl.append(getForecastElement(weatherList[i].main.temp, weatherList[i].wind.speed, weatherList[i].main.humidity));
+
                 }
 
             }
