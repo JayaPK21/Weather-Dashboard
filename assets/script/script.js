@@ -1,14 +1,16 @@
 var historyButtonsEl = $('#history');
 var currentDayHeading = $('<h2>');
 var forecastSectionEl = $('#forecast');
+var cityList = [];
 
 var APIKey = "7346f2f976dfac403985b13d4b581099";
 
-var cityName;
+//var cityName;
 var lonCity;
 var latCity;
 
 var convertKelvinToCelsius = function(temp) {
+
     var temInCelsius = temp - 273.15;
     return temInCelsius.toFixed(2);
 
@@ -34,14 +36,7 @@ var getForecastElement = function(date, icon, temp, windSpeed, humidity) {
 
 }
 
-$('#search-button').on('click', function(event) {
-
-    event.preventDefault();
-    cityName = $('#search-input').val();
-
-    historyButtonsEl.append($('<button>').text(cityName));
-
-    $('#search-input').val('');
+var getWeatherDetails = function(cityName) {
 
     var queryURL = "https://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&limit=1&appid="+APIKey;
 
@@ -119,6 +114,28 @@ $('#search-button').on('click', function(event) {
         forecastSectionEl.empty();
 
     });
+
+}
+
+$('#search-button').on('click', function(event) {
+
+    event.preventDefault();
+    var cityName = $('#search-input').val();
+
+    if(!cityList.includes(cityName)) {
+        historyButtonsEl.append($('<button>').text(cityName));
+        cityList.push(cityName);
+    }
+
+    $('#search-input').val('');
+
+    getWeatherDetails(cityName);
+});
+
+historyButtonsEl.on("click", "button", function(){
+    
+    console.log($(this).text());
+    getWeatherDetails($(this).text());
 
 });
 // $.ajax({
