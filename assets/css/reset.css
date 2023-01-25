@@ -1,0 +1,12 @@
+button{
+    width: 100%;
+    margin: 10px 0;
+    background-color: lightskyblue;
+    border-color: lightskyblue;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    border-bottom: solid gray;
+}
