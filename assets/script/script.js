@@ -1,5 +1,6 @@
 var historyButtonsEl = $('#history');
 var currentDayHeading = $('<h2>');
+var forecastSectionEl = $('#forecast');
 
 var APIKey = "7346f2f976dfac403985b13d4b581099";
 
@@ -13,11 +14,18 @@ var convertKelvinToCelsius = function(temp) {
 
 };
 
-var getForecastElement = function(temp, windSpeed, humidity) {
+var getForecastElement = function(date, icon, temp, windSpeed, humidity) {
 
+    var m = moment(date, 'YYYY-MM-DD');
     var forecastEl = $('<div>');
     forecastEl.addClass('col forecast-cards');
 
+    var imgIcon = $('<img>');
+    imgIcon.attr('src', "http://openweathermap.org/img/wn/"+icon+"@2x.png");
+                    
+    //console.log(m.format('D/M/YYYY')+" Formating **********");
+    forecastEl.append($('<h4>').text(m.format('D/M/YYYY')));
+    forecastEl.append(imgIcon);
     forecastEl.append($('<p>').text("Temp: " + convertKelvinToCelsius(temp) + "\u00B0C"));
     forecastEl.append($('<p>').text("Wind: " + windSpeed +" KPH"));
     forecastEl.append($('<p>').text("Humidity: " + humidity +"%"));
@@ -88,16 +96,19 @@ $('#search-button').on('click', function(event) {
             $('#today').append($('<p>').text("Wind: " + weatherList[0].wind.speed+" KPH"));
             $('#today').append($('<p>').text("Humidity: " + weatherList[0].main.humidity+"%"));
 
-            var forecastSectionEl = $('#forecast');
-
             for(var i=1; i<weatherList.length; i++) {
 
                 if(dateList.includes(weatherList[i].dt_txt)) {
 
-                    console.log(weatherList[i].dt_txt+" Formating **********");
-                    
-
-                    forecastSectionEl.append(getForecastElement(weatherList[i].main.temp, weatherList[i].wind.speed, weatherList[i].main.humidity));
+                    forecastSectionEl.append(
+                        getForecastElement(
+                            weatherList[i].dt_txt,
+                            weatherList[i].weather[0].icon,
+                            weatherList[i].main.temp, 
+                            weatherList[i].wind.speed, 
+                            weatherList[i].main.humidity
+                        )
+                    );
 
                 }
 
@@ -105,6 +116,7 @@ $('#search-button').on('click', function(event) {
         });
 
         $('#today').empty();
+        forecastSectionEl.empty();
 
     });
 
