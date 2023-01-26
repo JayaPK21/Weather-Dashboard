@@ -1,11 +1,10 @@
 var historyButtonsEl = $('#history');
 var currentDayHeading = $('<h2>');
 var forecastSectionEl = $('#forecast');
-var cityList = [];
+var cityList;
 
 var APIKey = "7346f2f976dfac403985b13d4b581099";
 
-//var cityName;
 var lonCity;
 var latCity;
 
@@ -34,7 +33,7 @@ var getForecastElement = function(date, icon, temp, windSpeed, humidity) {
 
     return forecastEl;
 
-}
+};
 
 var getWeatherDetails = function(cityName) {
 
@@ -48,6 +47,10 @@ var getWeatherDetails = function(cityName) {
     }).then(function(response) {
     
         console.log(response);
+        if(response.length === 0) {
+            alert("Please enter a valid city!");
+            return;
+        }
     
         lonCity = response[0].lon;
         latCity = response[0].lat;
@@ -84,12 +87,20 @@ var getWeatherDetails = function(cityName) {
 
             var imgIcon = $('<img>');
             imgIcon.attr('src', "http://openweathermap.org/img/wn/"+weatherList[0].weather[0].icon+"@2x.png");
-            // imgIcon.css('display', 'inline');
             
             $('#today').append(currentDayHeading.text(response.city.name + " (" + formattedDate + ") ").append(imgIcon));
             $('#today').append($('<p>').text("Temp: " + convertKelvinToCelsius(weatherList[0].main.temp) + "\u00B0C"));
             $('#today').append($('<p>').text("Wind: " + weatherList[0].wind.speed+" KPH"));
             $('#today').append($('<p>').text("Humidity: " + weatherList[0].main.humidity+"%"));
+
+            cityName=cityName[0].toUpperCase() + cityName.substring(1).toLowerCase();
+            
+            if(!cityList.includes(cityName)) {
+                historyButtonsEl.append($('<button>').text(cityName));
+                cityList.push(cityName);
+        
+                localStorage.setItem('cityNameList', JSON.stringify(cityList));
+            }
 
             for(var i=1; i<weatherList.length; i++) {
 
@@ -115,17 +126,33 @@ var getWeatherDetails = function(cityName) {
 
     });
 
+};
+
+var getInitialCityNameHistory = function() {
+
+    let storageItem = localStorage.getItem('cityNameList');
+
+    return JSON.parse(storageItem);
+};
+
+cityList = getInitialCityNameHistory();
+
+if(cityList === null) {
+    cityList = [];
+} else {
+    $.each(cityList, function (i, val) {
+
+        historyButtonsEl.append($('<button>').text(val));
+         
+    });
 }
+
+console.log(cityList);
 
 $('#search-button').on('click', function(event) {
 
     event.preventDefault();
     var cityName = $('#search-input').val();
-
-    if(!cityList.includes(cityName)) {
-        historyButtonsEl.append($('<button>').text(cityName));
-        cityList.push(cityName);
-    }
 
     $('#search-input').val('');
 
@@ -138,74 +165,3 @@ historyButtonsEl.on("click", "button", function(){
     getWeatherDetails($(this).text());
 
 });
-// $.ajax({
-
-//     url : queryURL,
-//     method : "GET"
-
-// }).then(function(response) {
-
-//     console.log(response);
-
-//     lonCity = response[0].lon;
-//     latCity = response[0].lat;
-
-//     console.log("longitude: "+lonCity+", latitude: "+latCity);
-
-//     var queryURLFiveDay = "https://api.openweathermap.org/data/2.5/forecast?lat="+latCity+"&lon="+lonCity+"&appid="+APIKey;
-
-    // $.ajax({
-
-    //     url : queryURLFiveDay,
-    //     method : "GET"
-
-    // }).then(function(response) {
-
-    //     console.log(response);
-        //console.log("Five day forecast object: "+JSON.stringify(response));
-
-        // --------------------------------------------------------------------------
-        // var list = response.list;
-
-        // for(var i=0; list.length; i++) {
-
-        
-
-        // // Create and save a reference to new empty table row
-        //     var tableRowEl = $('<tr>');
-        
-        //     var addTdEl = function(respKey) {
-
-        //     // Create and save references to 3 td elements containing the Title, Year, and Actors from the AJAX response object
-        //     var tdEl = $('<td>');
-        //     tdEl.text(respKey);
-
-        //     // Append the td elements to the new table row
-        //     tableRowEl.append(tdEl);
-
-        //     }
-
-        //     addTdEl(list[i].dt_txt);
-        //     addTdEl(list[i].main.temp);
-        //     //addTdEl(list[i].weather[0].icon);
-
-        //     var tdIcon = $('<td>');
-        //     var imgIcon = $('<img>');
-        //     imgIcon.attr('src', "http://openweathermap.org/img/wn/"+list[i].weather[0].icon+"@2x.png");
-
-        //     tdIcon.append(imgIcon);
-        //     tableRowEl.append(tdIcon);
-        
-        //     //console.log(response);
-        
-        //     // Append the table row to the tbody element
-        //     $('tbody').append(tableRowEl);
-        // }
-
-        //http://openweathermap.org/img/wn/10d@2x.png
-        //10d is the code for icon
-        // --------------------------------------------------------------------------
-
-    //});
-
-//});
