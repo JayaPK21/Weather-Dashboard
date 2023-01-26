@@ -1,14 +1,24 @@
 button{
     width: 100%;
     margin: 10px 0;
-    background-color: lightskyblue;
-    border-color: lightskyblue;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+#search-button {
+    background-color: #38b0fa;
+    border-color: #38b0fa;
+    color: white;
+}
+
+#history button {
+    background-color: #a4a4a4;
+    border-color: #a4a4a4;
 }
 
 .input-group {
     display: flex;
     flex-direction: column;
-    border-bottom: solid gray;
 }
 
 .forecast-cards {
@@ -17,4 +27,17 @@ button{
     color: white;
     margin: 5px 10px;
     padding-top: 10px;
+}
+
+.weather-search {
+    padding : 8px;
+}
+
+.form-group {
+
+    margin-bottom: 0;
+
+}
+.input-group-append {
+    display: block;
 }
