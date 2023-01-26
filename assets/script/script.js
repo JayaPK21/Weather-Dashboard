@@ -86,7 +86,7 @@ var getWeatherDetails = function(cityName) {
             });
 
             var imgIcon = $('<img>');
-            imgIcon.attr('src', "http://openweathermap.org/img/wn/"+weatherList[0].weather[0].icon+"@2x.png");
+            imgIcon.attr('src', "https://openweathermap.org/img/wn/"+weatherList[0].weather[0].icon+"@2x.png");
             
             $('#today').addClass('today-weather');
             $('#today').append(currentDayHeading.text(response.city.name + " (" + formattedDate + ") ").append(imgIcon));
@@ -102,6 +102,11 @@ var getWeatherDetails = function(cityName) {
         
                 localStorage.setItem('cityNameList', JSON.stringify(cityList));
             }
+
+            // Adding the header for the forecast details.
+            $('<h4>').text("5-day Forecast:")
+                        .addClass('mt-3')
+                            .insertBefore(forecastSectionEl);
 
             for(var i=1; i<weatherList.length; i++) {
 
@@ -122,8 +127,12 @@ var getWeatherDetails = function(cityName) {
             }
         });
 
+        // Removing the weather details of current city before displaying the weather for next city.
         $('#today').empty();
         forecastSectionEl.empty();
+        
+        // Removing the header element before the detailed 5 day forecast.
+        forecastSectionEl.prev('h4').remove();
 
     });
 
