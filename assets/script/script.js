@@ -88,6 +88,7 @@ var getWeatherDetails = function(cityName) {
             var imgIcon = $('<img>');
             imgIcon.attr('src', "http://openweathermap.org/img/wn/"+weatherList[0].weather[0].icon+"@2x.png");
             
+            $('#today').addClass('today-weather');
             $('#today').append(currentDayHeading.text(response.city.name + " (" + formattedDate + ") ").append(imgIcon));
             $('#today').append($('<p>').text("Temp: " + convertKelvinToCelsius(weatherList[0].main.temp) + "\u00B0C"));
             $('#today').append($('<p>').text("Wind: " + weatherList[0].wind.speed+" KPH"));
