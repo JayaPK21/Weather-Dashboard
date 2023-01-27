@@ -80,33 +80,49 @@ var getWeatherDetails = function(cityName) {
 
             // The response object contains the 'list' of details of weather forecast for every 3 hours of 5 day forecast.
             var weatherList = response.list;
+
+            // Stores the moment object for the current date
             var date = moment(weatherList[0].dt_txt, 'YYYY-MM-DD');
             var formattedDate = date.format('D/M/YYYY');
     
+            // Contains the list of dates for the next five days.
             var dateList = [];
             var numList = 0;
 
             while(numList < 5){
+
+                // Starting from the current day, 1 day is added every time, to get the list of dates for the next five days.
                 date.add(1,'day');
                 dateList.push(date.format('YYYY-MM-DD')+" 12:00:00");
                 numList++;
             }
 
+            // An image that contains the corresponding weather icon for the current day.
             var imgIcon = $('<img>');
             imgIcon.attr('src', "https://openweathermap.org/img/wn/"+weatherList[0].weather[0].icon+"@2x.png");
             
+            // Adds styling for the elements containing the details of the current weather.
             $('#today').addClass('today-weather');
+
+            // Adds the date, icon, temperature, wind speed, and humidity details of the current day.
             $('#today').append(currentDayHeading.text(response.city.name + " (" + formattedDate + ") ").append(imgIcon));
             $('#today').append($('<p>').text("Temp: " + convertKelvinToCelsius(weatherList[0].main.temp) + "\u00B0C"));
             $('#today').append($('<p>').text("Wind: " + weatherList[0].wind.speed+" KPH"));
             $('#today').append($('<p>').text("Humidity: " + weatherList[0].main.humidity+"%"));
 
+            // Converts the string containing the city name to have the first letter in upper case, with the rest of the letters in lower case. 
             cityName=cityName[0].toUpperCase() + cityName.substring(1).toLowerCase();
             
+            // Checks if the city name is not in the list of already searched cities, so that it can be added to the list.
             if(!cityList.includes(cityName)) {
+
+                // Appends the new city name button element, which has not been searched before to the history buttons.
                 historyButtonsEl.append($('<button>').text(cityName));
+
+                // Adds the new city name to the list of cities that has been searched before.
                 cityList.push(cityName);
         
+                // Sets the cityList array to the local storage, for persistence.
                 localStorage.setItem('cityNameList', JSON.stringify(cityList));
             }
 
@@ -115,8 +131,10 @@ var getWeatherDetails = function(cityName) {
                         .addClass('mt-3')
                             .insertBefore(forecastSectionEl);
 
+            // Loops through the whole list of weather details, which is obtained from the response object.
             for(var i=1; i<weatherList.length; i++) {
 
+                // Checks if the weather list date corresponds to the dates in the date list. If it is included in the date list, the weather details are displayed by appending them to the forecast element.
                 if(dateList.includes(weatherList[i].dt_txt)) {
 
                     forecastSectionEl.append(
@@ -179,6 +197,12 @@ $('#search-button').on('click', function(event) {
 
     // Gets the city name from the user input and stores it in the cityName variable.
     var cityName = $('#search-input').val();
+
+    // This adds a validation to check if a value is entered in the input field.
+    if(cityName === ''){
+        alert("Please enter a city name");
+        return;
+    }
 
     // Clears the input field on clicking the submit button.
     $('#search-input').val('');
