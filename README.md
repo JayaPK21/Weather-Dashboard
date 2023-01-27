@@ -22,6 +22,6 @@ https://jayapk21.github.io/Weather-Dashboard/
 
 ## Usage
 
-The following screenshot shows a sample of how the application can be used.
+The following screenshot shows a sample of the application.
 
-![An image of the application containing the weather forecast details for the city of London.](assets/screenshots)
+![An image of the application containing the weather forecast details for the city of London.](assets/screenshot/weather-dashboard.png)
