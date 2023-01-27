@@ -1,9 +1,21 @@
-.weather-header {
+/* Adds css variables for different colours used in application */
+:root {
 
-    background: linear-gradient(45deg, #1e1eff, #000b43);
+    --initial-colour-header : #1e1eff;
+    --final-colour-header : #000b43;
+    --button-search : #38b0fa;
+    --button-history : #a4a4a4;
+    --forecast-background : #2b2b9d;
+    --weather-background : #b7dfff;
 
 }
 
+/* Adds background colour to the application header */
+.weather-header {
+    background: linear-gradient(45deg, var(--initial-colour-header), var(--final-colour-header));
+}
+
+/* Adds common styling properties for all buttons in the application */
 button{
     width: 100%;
     margin: 10px 0;
@@ -11,45 +23,51 @@ button{
     border-radius: 8px;
 }
 
+/* Addional styling for search button */
 #search-button {
-    background-color: #38b0fa;
-    border-color: #38b0fa;
+    background-color: var(--button-search);
+    border-color: var(--button-search);
     color: white;
 }
 
+/* Additional styling for history buttons */
 #history button {
-    background-color: #a4a4a4;
-    border-color: #a4a4a4;
+    background-color: var(--button-history);
+    border-color: var(--button-history);
 }
 
+/* Displays the input text field and search button elements vertically */
 .input-group {
     display: flex;
     flex-direction: column;
 }
 
+/* Adds style for all the forecast cards displayed for each day */
 .forecast-cards {
 
-    background-color: #2b2b9d;
+    background-color: var(--forecast-background);
     color: white;
     margin: 5px 10px;
     padding-top: 10px;
 }
 
+/* Adds padding to the input text field for entering city name */
 .weather-search {
     padding : 8px;
 }
 
 .form-group {
-
     margin-bottom: 0;
-
 }
+
+/* This displays the submit button and hr elements vertically */
 .input-group-append {
     display: block;
 }
 
+/* Adds styling to the current weather details displayed */
 .today-weather {
     border: 1px solid;
     padding: 10px;
-    background-color: #b7dfff;
+    background-color: var(--weather-background);
 }
